@@ -1,0 +1,1100 @@
+<!doctype html>
+<html lang="en-GB">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>KRONATRIX AI | Websites Built To Rank On Google & AI Suggestions</title>
+  <meta name="description" content="KRONATRIX AI builds AI-readable websites for small creators, new businesses and personal brands who want to be easier to find, understand and recommend on Google and AI suggestion systems." />
+  <meta name="keywords" content="AI ranking website, AI suggestions, Google ranking website, personal brand website, small business website, creator website, AI SEO, answer engine optimisation, Kronatrix AI" />
+  <meta name="author" content="KRONATRIX AI" />
+  <meta name="robots" content="index, follow, max-image-preview:large" />
+  <link rel="canonical" href="https://kronatrix.ai/" />
+
+  <meta property="og:title" content="KRONATRIX AI | Get Found By Google & AI Suggestions" />
+  <meta property="og:description" content="If AI cannot find you, understand you, or explain why you matter, you lose attention. KRONATRIX AI builds websites made for discoverability." />
+  <meta property="og:type" content="website" />
+  <meta property="og:site_name" content="KRONATRIX AI" />
+  <meta name="twitter:card" content="summary_large_image" />
+
+  <script type="application/ld+json">
+  {
+    "@context": "https://schema.org",
+    "@type": "ProfessionalService",
+    "name": "KRONATRIX AI",
+    "description": "AI-readable website building for small creators, new businesses and personal brands who want to improve discoverability on Google and AI suggestion systems.",
+    "email": "kronatrix@gmail.com",
+    "url": "https://kronatrix.ai/",
+    "areaServed": "Worldwide",
+    "serviceType": [
+      "AI discoverability website build",
+      "Personal brand website",
+      "Small business website",
+      "Google SEO website structure",
+      "Answer engine optimisation"
+    ],
+    "sameAs": [
+      "https://corneliusaurelius.com/"
+    ]
+  }
+  </script>
+
+  <style>
+    :root {
+      --bg: #ffffff;
+      --bg-soft: #f5f9ff;
+      --bg-blue: #eef7ff;
+      --panel: rgba(255, 255, 255, 0.88);
+      --panel-strong: #ffffff;
+      --text: #07111f;
+      --muted: #526173;
+      --soft: #1a2a3d;
+      --line: rgba(12, 91, 160, 0.14);
+      --blue: #027aff;
+      --blue2: #00b7ff;
+      --cyan: #00c8ff;
+      --green: #04c986;
+      --shadow: 0 26px 80px rgba(2, 122, 255, 0.14);
+      --shadow-soft: 0 18px 54px rgba(7, 17, 31, 0.08);
+      --radius: 28px;
+      --max: 1160px;
+    }
+
+    * { box-sizing: border-box; }
+
+    html {
+      scroll-behavior: smooth;
+      background: var(--bg);
+    }
+
+    body {
+      margin: 0;
+      font-family: Inter, ui-sans-serif, system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
+      background:
+        radial-gradient(circle at 12% -10%, rgba(0, 183, 255, 0.18), transparent 32rem),
+        radial-gradient(circle at 92% 4%, rgba(4, 201, 134, 0.12), transparent 34rem),
+        linear-gradient(180deg, #ffffff 0%, #f7fbff 46%, #ffffff 100%);
+      color: var(--text);
+      min-height: 100vh;
+      overflow-x: hidden;
+    }
+
+    body::before {
+      content: "";
+      position: fixed;
+      inset: 0;
+      pointer-events: none;
+      background-image:
+        linear-gradient(rgba(2, 122, 255, 0.055) 1px, transparent 1px),
+        linear-gradient(90deg, rgba(2, 122, 255, 0.055) 1px, transparent 1px);
+      background-size: 48px 48px;
+      mask-image: linear-gradient(to bottom, rgba(0,0,0,0.54), transparent 72%);
+      z-index: -1;
+    }
+
+    a {
+      color: inherit;
+      text-decoration: none;
+    }
+
+    .wrap {
+      width: min(var(--max), calc(100% - 34px));
+      margin: 0 auto;
+    }
+
+    .nav {
+      position: sticky;
+      top: 0;
+      z-index: 20;
+      backdrop-filter: blur(18px);
+      background: rgba(255, 255, 255, 0.82);
+      border-bottom: 1px solid var(--line);
+    }
+
+    .nav-inner {
+      min-height: 76px;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 18px;
+    }
+
+    .brand {
+      display: flex;
+      align-items: center;
+      gap: 12px;
+      font-weight: 950;
+      letter-spacing: 0.08em;
+      color: #06101e;
+    }
+
+    .mark {
+      width: 42px;
+      height: 42px;
+      border: 1px solid rgba(2, 122, 255, 0.28);
+      border-radius: 14px;
+      background:
+        radial-gradient(circle at 50% 50%, rgba(4, 201, 134, 0.18), transparent 32%),
+        linear-gradient(135deg, rgba(0, 183, 255, 0.22), rgba(2, 122, 255, 0.08));
+      display: grid;
+      place-items: center;
+      box-shadow: 0 14px 36px rgba(2, 122, 255, 0.14);
+      position: relative;
+      overflow: hidden;
+    }
+
+    .mark::before,
+    .mark::after {
+      content: "";
+      position: absolute;
+      border: 1px solid rgba(2, 122, 255, 0.34);
+      border-radius: 50%;
+      width: 23px;
+      height: 23px;
+      transform: rotate(35deg);
+    }
+
+    .mark::after {
+      width: 8px;
+      height: 8px;
+      background: var(--blue);
+      box-shadow: 0 0 18px var(--blue);
+      border: none;
+    }
+
+    .brand span:last-child {
+      font-size: 0.98rem;
+    }
+
+    .nav-links {
+      display: flex;
+      align-items: center;
+      gap: 18px;
+      color: var(--muted);
+      font-size: 0.92rem;
+      font-weight: 750;
+    }
+
+    .nav-links a:hover {
+      color: var(--blue);
+    }
+
+    .nav-cta {
+      padding: 11px 16px;
+      border: 1px solid rgba(2, 122, 255, 0.22);
+      background: rgba(2, 122, 255, 0.08);
+      border-radius: 999px;
+      color: var(--blue) !important;
+      box-shadow: 0 12px 26px rgba(2, 122, 255, 0.08);
+    }
+
+    .hero {
+      padding: 74px 0 56px;
+    }
+
+    .hero-grid {
+      display: grid;
+      grid-template-columns: 1.05fr 0.95fr;
+      gap: 34px;
+      align-items: center;
+    }
+
+    .eyebrow {
+      display: inline-flex;
+      align-items: center;
+      gap: 9px;
+      padding: 8px 12px;
+      border: 1px solid rgba(2, 122, 255, 0.18);
+      border-radius: 999px;
+      background: rgba(2, 122, 255, 0.07);
+      color: #064b8d;
+      font-size: 0.84rem;
+      font-weight: 850;
+      letter-spacing: 0.03em;
+      margin-bottom: 22px;
+    }
+
+    .dot {
+      width: 8px;
+      height: 8px;
+      border-radius: 50%;
+      background: var(--green);
+      box-shadow: 0 0 18px rgba(4, 201, 134, 0.7);
+    }
+
+    h1 {
+      margin: 0;
+      font-size: clamp(3rem, 7vw, 6.8rem);
+      line-height: 0.88;
+      letter-spacing: -0.075em;
+      max-width: 880px;
+    }
+
+    .gradient-text {
+      background: linear-gradient(90deg, #07111f, #027aff 45%, #00a6ff 70%, #04c986);
+      -webkit-background-clip: text;
+      color: transparent;
+    }
+
+    .hero-copy {
+      margin: 26px 0 0;
+      color: var(--soft);
+      font-size: clamp(1.08rem, 2vw, 1.45rem);
+      line-height: 1.55;
+      max-width: 720px;
+    }
+
+    .hero-copy strong {
+      color: #07111f;
+    }
+
+    .hero-actions {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 13px;
+      margin-top: 30px;
+    }
+
+    .btn {
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      gap: 10px;
+      min-height: 54px;
+      padding: 15px 21px;
+      border-radius: 999px;
+      font-weight: 950;
+      border: 1px solid rgba(7, 17, 31, 0.12);
+      transition: transform 0.2s ease, border 0.2s ease, background 0.2s ease, box-shadow 0.2s ease;
+      cursor: pointer;
+      font-size: 0.98rem;
+    }
+
+    .btn:hover {
+      transform: translateY(-2px);
+      border-color: rgba(2, 122, 255, 0.35);
+      box-shadow: 0 18px 38px rgba(2, 122, 255, 0.13);
+    }
+
+    .btn-primary {
+      background: linear-gradient(135deg, var(--blue), var(--blue2));
+      color: #ffffff;
+      box-shadow: 0 18px 44px rgba(2, 122, 255, 0.20);
+      border: 0;
+    }
+
+    .btn-secondary {
+      background: #ffffff;
+      color: var(--text);
+      box-shadow: var(--shadow-soft);
+    }
+
+    .mini-proof {
+      display: grid;
+      grid-template-columns: repeat(3, 1fr);
+      gap: 12px;
+      margin-top: 32px;
+      max-width: 760px;
+    }
+
+    .proof-card {
+      border: 1px solid var(--line);
+      border-radius: 20px;
+      padding: 15px;
+      background: rgba(255,255,255,0.78);
+      box-shadow: 0 12px 34px rgba(7, 17, 31, 0.05);
+    }
+
+    .proof-card b {
+      display: block;
+      font-size: 1rem;
+      margin-bottom: 5px;
+    }
+
+    .proof-card span {
+      color: var(--muted);
+      font-size: 0.9rem;
+      line-height: 1.35;
+    }
+
+    .form-card {
+      border: 1px solid rgba(2, 122, 255, 0.18);
+      background:
+        linear-gradient(180deg, rgba(255, 255, 255, 0.96), rgba(247, 251, 255, 0.96)),
+        radial-gradient(circle at 50% 0%, rgba(0, 183, 255, 0.16), transparent 28rem);
+      border-radius: var(--radius);
+      padding: 24px;
+      box-shadow: var(--shadow);
+      position: relative;
+      overflow: hidden;
+    }
+
+    .form-card::before {
+      content: "";
+      position: absolute;
+      inset: 0;
+      background: linear-gradient(100deg, transparent, rgba(2, 122, 255, 0.06), transparent);
+      transform: translateX(-100%);
+      animation: shimmer 8s infinite;
+      pointer-events: none;
+    }
+
+    @keyframes shimmer {
+      0%, 35% { transform: translateX(-120%); }
+      58%, 100% { transform: translateX(120%); }
+    }
+
+    .form-top {
+      position: relative;
+      z-index: 1;
+      margin-bottom: 18px;
+    }
+
+    .form-top h2 {
+      font-size: clamp(1.55rem, 3vw, 2.35rem);
+      line-height: 1.02;
+      letter-spacing: -0.045em;
+      margin: 0;
+    }
+
+    .form-top p {
+      color: var(--muted);
+      line-height: 1.55;
+      margin: 12px 0 0;
+    }
+
+    form {
+      position: relative;
+      z-index: 1;
+      display: grid;
+      gap: 12px;
+    }
+
+    label {
+      display: grid;
+      gap: 7px;
+      font-weight: 850;
+      color: #0b1728;
+      font-size: 0.9rem;
+    }
+
+    input, select, textarea {
+      width: 100%;
+      border: 1px solid rgba(7, 17, 31, 0.13);
+      background: #ffffff;
+      color: var(--text);
+      border-radius: 15px;
+      padding: 14px 14px;
+      font: inherit;
+      outline: none;
+      transition: border 0.2s ease, box-shadow 0.2s ease;
+      box-shadow: inset 0 1px 0 rgba(7, 17, 31, 0.03);
+    }
+
+    input::placeholder, textarea::placeholder {
+      color: #8a99aa;
+    }
+
+    input:focus, select:focus, textarea:focus {
+      border-color: rgba(2, 122, 255, 0.55);
+      box-shadow: 0 0 0 4px rgba(2, 122, 255, 0.10);
+    }
+
+    textarea {
+      min-height: 92px;
+      resize: vertical;
+    }
+
+    .two {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 12px;
+    }
+
+    .submit {
+      width: 100%;
+      min-height: 58px;
+      border: 0;
+      border-radius: 16px;
+      background: linear-gradient(135deg, var(--green), var(--blue));
+      color: #ffffff;
+      font-weight: 1000;
+      font-size: 1rem;
+      cursor: pointer;
+      box-shadow: 0 18px 44px rgba(4, 201, 134, 0.16);
+      margin-top: 4px;
+    }
+
+    .form-small {
+      color: var(--muted);
+      font-size: 0.84rem;
+      line-height: 1.45;
+      margin: 7px 0 0;
+    }
+
+    .direct-email {
+      color: var(--blue);
+      text-decoration: underline;
+      text-decoration-color: rgba(2,122,255,0.35);
+      text-underline-offset: 4px;
+      font-weight: 850;
+    }
+
+    section {
+      padding: 58px 0;
+    }
+
+    .section-head {
+      max-width: 780px;
+      margin-bottom: 24px;
+    }
+
+    .kicker {
+      color: var(--blue);
+      font-weight: 950;
+      letter-spacing: 0.08em;
+      text-transform: uppercase;
+      font-size: 0.82rem;
+      margin-bottom: 10px;
+    }
+
+    h2 {
+      font-size: clamp(2.15rem, 4.2vw, 4.2rem);
+      line-height: 0.98;
+      letter-spacing: -0.065em;
+      margin: 0;
+    }
+
+    .section-head p {
+      color: var(--muted);
+      line-height: 1.65;
+      font-size: 1.08rem;
+      margin: 16px 0 0;
+    }
+
+    .cards {
+      display: grid;
+      grid-template-columns: repeat(3, 1fr);
+      gap: 15px;
+    }
+
+    .card {
+      border: 1px solid var(--line);
+      background: rgba(255,255,255,0.82);
+      border-radius: 24px;
+      padding: 22px;
+      min-height: 210px;
+      box-shadow: var(--shadow-soft);
+    }
+
+    .card .num {
+      color: #017a55;
+      font-weight: 1000;
+      margin-bottom: 18px;
+      display: inline-flex;
+      border: 1px solid rgba(4, 201, 134, 0.22);
+      background: rgba(4, 201, 134, 0.09);
+      border-radius: 999px;
+      padding: 7px 10px;
+      font-size: 0.82rem;
+    }
+
+    .card h3 {
+      margin: 0 0 10px;
+      font-size: 1.26rem;
+      letter-spacing: -0.025em;
+      line-height: 1.1;
+    }
+
+    .card p {
+      margin: 0;
+      color: var(--muted);
+      line-height: 1.58;
+    }
+
+    .split {
+      display: grid;
+      grid-template-columns: 0.95fr 1.05fr;
+      gap: 26px;
+      align-items: stretch;
+    }
+
+    .panel {
+      border: 1px solid var(--line);
+      background: rgba(255,255,255,0.84);
+      border-radius: var(--radius);
+      padding: 28px;
+      min-height: 100%;
+      box-shadow: var(--shadow-soft);
+    }
+
+    .panel h2 {
+      font-size: clamp(2rem, 3.8vw, 3.7rem);
+    }
+
+    .panel p {
+      color: var(--muted);
+      line-height: 1.65;
+      font-size: 1.05rem;
+    }
+
+    .checklist {
+      list-style: none;
+      padding: 0;
+      margin: 0;
+      display: grid;
+      gap: 12px;
+    }
+
+    .checklist li {
+      display: grid;
+      grid-template-columns: 25px 1fr;
+      gap: 10px;
+      color: var(--soft);
+      line-height: 1.5;
+    }
+
+    .checklist li::before {
+      content: "✓";
+      width: 25px;
+      height: 25px;
+      display: grid;
+      place-items: center;
+      border-radius: 50%;
+      background: rgba(4, 201, 134, 0.11);
+      color: #017a55;
+      font-weight: 1000;
+    }
+
+    .big-strip {
+      border: 1px solid rgba(2, 122, 255, 0.16);
+      background:
+        radial-gradient(circle at 0% 0%, rgba(0, 183, 255, 0.14), transparent 34rem),
+        linear-gradient(135deg, rgba(255, 255, 255, 0.96), rgba(238, 247, 255, 0.96));
+      border-radius: 34px;
+      padding: clamp(24px, 5vw, 48px);
+      display: grid;
+      grid-template-columns: 1.2fr 0.8fr;
+      gap: 24px;
+      align-items: center;
+      box-shadow: var(--shadow);
+    }
+
+    .big-strip h2 {
+      max-width: 780px;
+    }
+
+    .big-strip p {
+      color: var(--soft);
+      line-height: 1.62;
+      font-size: 1.08rem;
+      max-width: 760px;
+    }
+
+    .tag-list {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 9px;
+      margin-top: 18px;
+    }
+
+    .tag {
+      border: 1px solid rgba(7,17,31,0.10);
+      background: #ffffff;
+      color: #26384d;
+      border-radius: 999px;
+      padding: 9px 11px;
+      font-weight: 780;
+      font-size: 0.88rem;
+      box-shadow: 0 8px 22px rgba(7, 17, 31, 0.04);
+    }
+
+    .faq {
+      display: grid;
+      gap: 12px;
+    }
+
+    details {
+      border: 1px solid var(--line);
+      background: rgba(255,255,255,0.84);
+      border-radius: 20px;
+      padding: 18px 20px;
+      box-shadow: 0 10px 28px rgba(7, 17, 31, 0.045);
+    }
+
+    summary {
+      cursor: pointer;
+      font-weight: 950;
+      font-size: 1.04rem;
+    }
+
+    details p {
+      color: var(--muted);
+      line-height: 1.62;
+      margin-bottom: 0;
+    }
+
+    footer {
+      border-top: 1px solid var(--line);
+      padding: 34px 0 44px;
+      color: var(--muted);
+      background: #ffffff;
+    }
+
+    .footer-grid {
+      display: flex;
+      justify-content: space-between;
+      gap: 18px;
+      align-items: center;
+      flex-wrap: wrap;
+    }
+
+    .footer-links {
+      display: flex;
+      gap: 16px;
+      flex-wrap: wrap;
+      font-weight: 820;
+    }
+
+    .footer-links a:hover {
+      color: var(--blue);
+    }
+
+    .notice {
+      color: #657386;
+      font-size: 0.88rem;
+      line-height: 1.55;
+      max-width: 900px;
+      margin-top: 18px;
+    }
+
+    .toast {
+      position: fixed;
+      left: 50%;
+      bottom: 18px;
+      transform: translateX(-50%) translateY(22px);
+      background: #ffffff;
+      color: var(--text);
+      border: 1px solid rgba(2, 122, 255, 0.22);
+      border-radius: 999px;
+      padding: 13px 18px;
+      box-shadow: var(--shadow);
+      opacity: 0;
+      pointer-events: none;
+      transition: opacity 0.25s ease, transform 0.25s ease;
+      z-index: 100;
+      font-weight: 850;
+      text-align: center;
+      max-width: calc(100% - 24px);
+    }
+
+    .toast.show {
+      opacity: 1;
+      transform: translateX(-50%) translateY(0);
+    }
+
+    @media (max-width: 920px) {
+      .hero {
+        padding-top: 45px;
+      }
+
+      .hero-grid,
+      .split,
+      .big-strip {
+        grid-template-columns: 1fr;
+      }
+
+      .cards,
+      .mini-proof {
+        grid-template-columns: 1fr;
+      }
+
+      .nav-links {
+        display: none;
+      }
+
+      h1 {
+        font-size: clamp(3.05rem, 15vw, 5.3rem);
+      }
+    }
+
+    @media (max-width: 570px) {
+      .wrap {
+        width: min(100% - 24px, var(--max));
+      }
+
+      .two {
+        grid-template-columns: 1fr;
+      }
+
+      .hero-actions .btn {
+        width: 100%;
+      }
+
+      .form-card,
+      .panel,
+      .card {
+        border-radius: 22px;
+      }
+
+      .brand span:last-child {
+        font-size: 0.86rem;
+      }
+    }
+  </style>
+</head>
+
+<body>
+  <header class="nav">
+    <div class="wrap nav-inner">
+      <a class="brand" href="#top" aria-label="KRONATRIX AI home">
+        <span class="mark" aria-hidden="true"></span>
+        <span>KRONATRIX AI</span>
+      </a>
+
+      <nav class="nav-links" aria-label="Main navigation">
+        <a href="#problem">Why it matters</a>
+        <a href="#build">What we build</a>
+        <a href="#contact" class="nav-cta">Request a callback</a>
+      </nav>
+    </div>
+  </header>
+
+  <main id="top">
+    <section class="hero">
+      <div class="wrap hero-grid">
+        <div>
+          <div class="eyebrow"><span class="dot"></span> The next search engine is an AI recommendation.</div>
+
+          <h1>
+            Get found when people ask AI who to choose.
+            <span class="gradient-text">Before your competitors do.</span>
+          </h1>
+
+          <p class="hero-copy">
+            KRONATRIX AI builds websites for <strong>small creators, new businesses and personal brands</strong> that are structured so Google and AI systems can find you, understand you, and explain why you matter.
+          </p>
+
+          <div class="hero-actions">
+            <a class="btn btn-primary" href="#contact">Send my details</a>
+            <a class="btn btn-secondary" href="#build">See what we build</a>
+          </div>
+
+          <div class="mini-proof" aria-label="KRONATRIX AI benefits">
+            <div class="proof-card">
+              <b>AI-readable</b>
+              <span>Clear pages, schema, answers and positioning built for machine understanding.</span>
+            </div>
+            <div class="proof-card">
+              <b>Google-ready</b>
+              <span>Search-focused structure, internal linking, metadata and local/niche signals.</span>
+            </div>
+            <div class="proof-card">
+              <b>Brand-focused</b>
+              <span>Your offer, proof, niche and authority made obvious in seconds.</span>
+            </div>
+          </div>
+        </div>
+
+        <aside class="form-card" id="contact" aria-label="Request a KRONATRIX AI callback">
+          <div class="form-top">
+            <h2>Want your brand to be easier to find?</h2>
+            <p>Send your details. A member of the KRONATRIX team will contact you to learn more about your business, brand, offer and website goals.</p>
+          </div>
+
+          <form id="leadForm">
+            <div class="two">
+              <label>
+                First name *
+                <input name="firstName" type="text" autocomplete="given-name" required placeholder="First name" />
+              </label>
+              <label>
+                Last name *
+                <input name="lastName" type="text" autocomplete="family-name" required placeholder="Last name" />
+              </label>
+            </div>
+
+            <label>
+              Phone number *
+              <input name="phone" type="tel" autocomplete="tel" required placeholder="Your best phone number" />
+            </label>
+
+            <label>
+              Email address
+              <input name="email" type="email" autocomplete="email" placeholder="Optional, but helpful" />
+            </label>
+
+            <label>
+              Website or social link
+              <input name="url" type="url" inputmode="url" placeholder="https://yourwebsite.com or social profile" />
+            </label>
+
+            <label>
+              What do you need?
+              <select name="interest">
+                <option value="Build my AI-ranking website">Build my AI-ranking website</option>
+                <option value="Free audit">Free audit</option>
+                <option value="Personal brand website">Personal brand website</option>
+                <option value="Small business website">Small business website</option>
+                <option value="Creator website">Creator website</option>
+              </select>
+            </label>
+
+            <label>
+              Anything we should know?
+              <textarea name="message" placeholder="Tell us what you do, who you help, and what you want to be found for."></textarea>
+            </label>
+
+            <button class="submit" type="submit">Request my KRONATRIX callback</button>
+
+            <p class="form-small">
+              This opens your email app with your details ready to send to
+              <a class="direct-email" href="mailto:kronatrix@gmail.com">kronatrix@gmail.com</a>.
+            </p>
+          </form>
+        </aside>
+      </div>
+    </section>
+
+    <section id="problem">
+      <div class="wrap">
+        <div class="section-head">
+          <div class="kicker">The problem</div>
+          <h2>If AI cannot understand you, it is less likely to recommend you.</h2>
+          <p>
+            Attention is changing. People are not only searching Google. They are asking AI tools who to trust, what to buy, who to follow, which expert to learn from, and which small business can solve their problem.
+          </p>
+        </div>
+
+        <div class="cards">
+          <article class="card">
+            <span class="num">01</span>
+            <h3>Your website may look good but say nothing clearly.</h3>
+            <p>Many websites hide the most important signals: who you help, what you do, where you operate, what makes you credible and what people should contact you for.</p>
+          </article>
+
+          <article class="card">
+            <span class="num">02</span>
+            <h3>AI systems need clean information.</h3>
+            <p>If your brand, services, audience, proof and location are unclear, AI has less useful information to work with when someone asks for recommendations.</p>
+          </article>
+
+          <article class="card">
+            <span class="num">03</span>
+            <h3>Your future customers may never see you.</h3>
+            <p>If competitors are easier to understand, easier to cite and easier to recommend, they may win the attention before your brand is even considered.</p>
+          </article>
+        </div>
+      </div>
+    </section>
+
+    <section id="build">
+      <div class="wrap split">
+        <div class="panel">
+          <div class="kicker">What KRONATRIX builds</div>
+          <h2>A website that explains your value to humans and machines.</h2>
+          <p>
+            We build direct, niche-specific websites designed to help your audience understand you quickly and help search and AI systems interpret your brand more accurately.
+          </p>
+          <a class="btn btn-primary" href="#contact">Speak to KRONATRIX</a>
+        </div>
+
+        <div class="panel">
+          <ul class="checklist">
+            <li>Clear homepage hook that explains who you help and why they need you.</li>
+            <li>AI-readable service pages built around your niche, offer and audience.</li>
+            <li>Google SEO foundations including titles, descriptions, internal links and index-friendly structure.</li>
+            <li>Schema markup that helps machines understand your business category, services and contact routes.</li>
+            <li>FAQ sections written around the questions customers and AI tools are likely to ask.</li>
+            <li>Trust signals, proof sections, founder story and positioning so your brand feels real.</li>
+            <li>Simple conversion path so visitors can request a callback fast.</li>
+          </ul>
+        </div>
+      </div>
+    </section>
+
+    <section>
+      <div class="wrap">
+        <div class="big-strip">
+          <div>
+            <div class="kicker">Who this is for</div>
+            <h2>Small now does not mean invisible later.</h2>
+            <p>
+              KRONATRIX AI is for creators, coaches, consultants, local businesses, new founders, freelancers, service providers, niche experts and personal brands who want to be easier to discover before their market gets crowded.
+            </p>
+            <div class="tag-list" aria-label="Audience tags">
+              <span class="tag">Small creators</span>
+              <span class="tag">New businesses</span>
+              <span class="tag">Personal brands</span>
+              <span class="tag">Coaches</span>
+              <span class="tag">Consultants</span>
+              <span class="tag">Local services</span>
+              <span class="tag">Niche experts</span>
+              <span class="tag">Freelancers</span>
+            </div>
+          </div>
+
+          <div>
+            <a class="btn btn-primary" href="#contact">Send name + phone number</a>
+            <p class="form-small" style="margin-top:14px;">
+              No complicated form. No confusing process. Send your details and we will contact you to learn more.
+            </p>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <section>
+      <div class="wrap">
+        <div class="section-head">
+          <div class="kicker">Resources</div>
+          <h2>Built around attention, ranking and online authority.</h2>
+          <p>Explore free Cornelius Aurelius resources connected to business, marketing, personal brand and niche positioning.</p>
+        </div>
+
+        <div class="cards">
+          <article class="card">
+            <span class="num">FREE</span>
+            <h3>Free ebooks</h3>
+            <p>Read free business and thinking ebooks by Cornelius Aurelius.</p>
+            <p style="margin-top:14px;"><a class="direct-email" href="https://cornelius-aurelius.github.io/CORNELIUS-AURELIUS-EBOOK-LIBRARY/#top">Open ebook library</a></p>
+          </article>
+
+          <article class="card">
+            <span class="num">GPTs</span>
+            <h3>Free niche marketing GPTs</h3>
+            <p>Use niche marketing GPTs designed to help creators and small businesses sharpen their positioning.</p>
+            <p style="margin-top:14px;"><a class="direct-email" href="https://cornelius-aurelius.github.io/KRONATRIX-MARKETING-GPTs/">Open marketing GPTs</a></p>
+          </article>
+
+          <article class="card">
+            <span class="num">SITE</span>
+            <h3>Cornelius Aurelius</h3>
+            <p>Explore more projects, books, tools and ideas from Cornelius Aurelius.</p>
+            <p style="margin-top:14px;"><a class="direct-email" href="https://corneliusaurelius.com/">Visit main site</a></p>
+          </article>
+        </div>
+      </div>
+    </section>
+
+    <section>
+      <div class="wrap">
+        <div class="section-head">
+          <div class="kicker">Questions</div>
+          <h2>Simple answers before you contact us.</h2>
+        </div>
+
+        <div class="faq">
+          <details>
+            <summary>Can you guarantee that AI will recommend my business?</summary>
+            <p>No honest company should guarantee that. What KRONATRIX AI can do is build a clearer, more structured, more machine-readable website that gives search engines and AI systems better information to understand your brand.</p>
+          </details>
+
+          <details>
+            <summary>Do I need an existing website?</summary>
+            <p>No. KRONATRIX AI can help if you have no website, an old website, a basic landing page, or a brand that only exists on social media.</p>
+          </details>
+
+          <details>
+            <summary>Who is this best for?</summary>
+            <p>Creators, founders, coaches, consultants, freelancers, local businesses, niche experts and personal brands who want to be easier to find and understand online.</p>
+          </details>
+
+          <details>
+            <summary>What happens after I send my details?</summary>
+            <p>A member of the KRONATRIX team contacts you to learn what you do, who you help, what you want to rank for and whether your brand needs a new website, a rebuild or an AI discoverability audit.</p>
+          </details>
+        </div>
+      </div>
+    </section>
+
+    <section>
+      <div class="wrap">
+        <div class="big-strip">
+          <div>
+            <div class="kicker">Start now</div>
+            <h2>The brands AI understands first may get recommended first.</h2>
+            <p>
+              Send your first name, last name and phone number. KRONATRIX AI will contact you to learn more about your business and what you want to be known for.
+            </p>
+          </div>
+
+          <a class="btn btn-primary" href="#contact">Request a callback</a>
+        </div>
+      </div>
+    </section>
+  </main>
+
+  <footer>
+    <div class="wrap">
+      <div class="footer-grid">
+        <div>
+          <strong style="color:#07111f;">KRONATRIX AI</strong><br>
+          Websites built for Google, AI suggestions and clear online authority.
+        </div>
+        <div class="footer-links">
+          <a href="mailto:kronatrix@gmail.com">kronatrix@gmail.com</a>
+          <a href="https://corneliusaurelius.com/">corneliusaurelius.com</a>
+          <a href="#top">Back to top</a>
+        </div>
+      </div>
+
+      <p class="notice">
+        KRONATRIX AI builds websites designed to improve clarity, structure and discoverability. Search rankings and AI recommendations depend on many external factors and cannot be guaranteed. © 2026 KRONATRIX AI.
+      </p>
+    </div>
+  </footer>
+
+  <div class="toast" id="toast" role="status" aria-live="polite">Opening email with your details...</div>
+
+  <script>
+    const form = document.getElementById("leadForm");
+    const toast = document.getElementById("toast");
+
+    function showToast(message) {
+      toast.textContent = message;
+      toast.classList.add("show");
+      window.setTimeout(() => toast.classList.remove("show"), 3600);
+    }
+
+    form.addEventListener("submit", function(event) {
+      event.preventDefault();
+
+      const data = new FormData(form);
+      const firstName = (data.get("firstName") || "").trim();
+      const lastName = (data.get("lastName") || "").trim();
+      const phone = (data.get("phone") || "").trim();
+      const email = (data.get("email") || "").trim();
+      const url = (data.get("url") || "").trim();
+      const interest = (data.get("interest") || "").trim();
+      const message = (data.get("message") || "").trim();
+
+      if (!firstName || !lastName || !phone) {
+        showToast("Please add your first name, last name and phone number.");
+        return;
+      }
+
+      const subject = encodeURIComponent("KRONATRIX AI callback request");
+      const body = encodeURIComponent(
+`Hello KRONATRIX AI,
+
+I would like a member of the team to contact me.
+
+First name: ${firstName}
+Last name: ${lastName}
+Phone number: ${phone}
+Email: ${email || "Not provided"}
+Website / social link: ${url || "Not provided"}
+Interest: ${interest}
+
+Message:
+${message || "No extra message provided."}
+
+Thank you.`
+      );
+
+      showToast("Opening email with your details...");
+      window.location.href = `mailto:kronatrix@gmail.com?subject=${subject}&body=${body}`;
+    });
+  </script>
+</body>
+</html>
