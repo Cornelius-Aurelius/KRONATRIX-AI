@@ -562,6 +562,47 @@
   .hero-art{height:min(66svh,520px);min-height:300px;}
   .hero-art img{max-height:min(66svh,520px);}
 }
+
+
+/* Final desktop Spencer sizing: larger author-site style, no cropping, no empty head space */
+@media (min-width:821px){
+  .hero-v2-wrap{
+    grid-template-columns:minmax(0,1.02fr) minmax(430px,.98fr) !important;
+    gap:clamp(16px,3vw,48px) !important;
+    align-items:center !important;
+  }
+  .hero-art{
+    height:min(80svh,690px) !important;
+    min-height:480px !important;
+    display:flex !important;
+    align-items:flex-end !important;
+    justify-content:center !important;
+    margin:-8px 0 -2px !important;
+    overflow:visible !important;
+  }
+  .hero-art img{
+    height:min(80svh,690px) !important;
+    max-height:min(80svh,690px) !important;
+    width:auto !important;
+    max-width:100% !important;
+    object-fit:contain !important;
+    object-position:center bottom !important;
+  }
+}
+@media (max-height:720px) and (min-width:821px){
+  .hero.hero-v2{padding-top:10px !important;padding-bottom:10px !important;}
+  .hero-v2-wrap{grid-template-columns:minmax(0,1.04fr) minmax(410px,.96fr) !important;}
+  .hero-art{
+    height:min(80svh,560px) !important;
+    min-height:460px !important;
+    margin:-6px 0 -4px !important;
+  }
+  .hero-art img{
+    height:min(80svh,560px) !important;
+    max-height:min(80svh,560px) !important;
+  }
+}
+
 </style>
 <script type="application/ld+json">{"@context":"https://schema.org","@type":"ItemList","@id":"https://kronatrix.co.uk/#proof-of-concept-work","name":"KRONATRIX AI proof of concept website portfolio","description":"Live example websites created by KRONATRIX AI for Cornelius Aurelius ebook promotion, designed to be mobile-friendly, Google-ready and AI-readable.","itemListElement":[{"@type":"ListItem","position":1,"url":"https://cornelius-aurelius.github.io/PROOF-IS-KING-MARKETING/","name":"Proof Is King promotional website"},{"@type":"ListItem","position":2,"url":"https://cornelius-aurelius.github.io/WHY-YOU-KEEP-CHOOSING-THE-WRONG-PEOPLE-MARKETING/#main","name":"Why You Keep Choosing the Wrong People promotional website"},{"@type":"ListItem","position":3,"url":"https://cornelius-aurelius.github.io/THE-CONTINUATION-CODE-BOOK/","name":"The Continuation Code book website"},{"@type":"ListItem","position":4,"url":"https://cornelius-aurelius.github.io/BECOME-WORTH-PAYING-BOOK/","name":"Become Worth Paying book website"}]}</script>
 </head>
