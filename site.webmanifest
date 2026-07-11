@@ -1,0 +1,22 @@
+{
+  "name": "KRONATRIX AI",
+  "short_name": "KRONATRIX",
+  "description": "KRONATRIX builds AI-readable websites for businesses, authors and personal brands to improve visibility on Google, ChatGPT and Gemini. Start with a free check.",
+  "start_url": "/",
+  "scope": "/",
+  "display": "standalone",
+  "background_color": "#07101f",
+  "theme_color": "#07101f",
+  "icons": [
+    {
+      "src": "favicon-192x192.png",
+      "sizes": "192x192",
+      "type": "image/png"
+    },
+    {
+      "src": "favicon-512x512.png",
+      "sizes": "512x512",
+      "type": "image/png"
+    }
+  ]
+}
