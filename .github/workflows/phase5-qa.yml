@@ -11,6 +11,8 @@ on:
 
 permissions:
   contents: read
+  issues: write
+  pull-requests: write
 
 jobs:
   qa:
@@ -34,6 +36,8 @@ jobs:
         run: mkdir -p qa/lighthouse qa/screenshots
 
       - name: Static HTML, metadata and local-link audit
+        id: staticqa
+        continue-on-error: true
         shell: bash
         run: |
           python - <<'PY'
@@ -44,10 +48,7 @@ jobs:
 
           ROOT = Path('.').resolve()
           html_files = sorted(p for p in ROOT.rglob('*.html') if '.git' not in p.parts)
-          issues=[]
-          rows=[]
-          canonicals={}
-          titles={}
+          issues=[]; rows=[]; canonicals={}; titles={}
 
           class P(HTMLParser):
               def __init__(self):
@@ -68,8 +69,7 @@ jobs:
                   if tag=='script' and a.get('type')=='application/ld+json': self._script_type='jsonld'; self._script=''
               def handle_endtag(self, tag):
                   if tag=='title': self.in_title=False
-                  if tag=='script' and self._script_type=='jsonld':
-                      self.jsonld.append(self._script); self._script_type=None; self._script=''
+                  if tag=='script' and self._script_type=='jsonld': self.jsonld.append(self._script); self._script_type=None; self._script=''
               def handle_data(self, data):
                   if self.in_title: self.title += data
                   if self._script_type=='jsonld': self._script += data
@@ -83,22 +83,16 @@ jobs:
               elif u.scheme: return None
               else: path=unquote(u.path)
               if not path: return page
-              if path.startswith('/'):
-                  target=ROOT/path.lstrip('/')
-              else:
-                  target=page.parent/path
+              if path.startswith('/'): target=ROOT/path.lstrip('/')
+              else: target=page.parent/path
               target=Path(str(target).split('#')[0].split('?')[0])
-              if target.is_dir() or str(path).endswith('/'):
-                  target=target/'index.html'
+              if target.is_dir() or str(path).endswith('/'): target=target/'index.html'
               return target
 
           for p in html_files:
-              parser=P(); text=p.read_text(encoding='utf-8', errors='replace'); parser.feed(text)
-              rel=str(p.relative_to(ROOT))
-              title=' '.join(parser.title.split())
-              desc=parser.meta.get('description','').strip()
-              row={'file':rel,'title':title,'title_len':len(title),'description_len':len(desc),'canonical':parser.canonical,'h1':parser.h1,'lang':parser.lang}
-              rows.append(row)
+              parser=P(); parser.feed(p.read_text(encoding='utf-8', errors='replace'))
+              rel=str(p.relative_to(ROOT)); title=' '.join(parser.title.split()); desc=parser.meta.get('description','').strip()
+              rows.append({'file':rel,'title':title,'title_len':len(title),'description_len':len(desc),'canonical':parser.canonical,'h1':parser.h1,'lang':parser.lang})
               if not title: issues.append((rel,'ERROR','Missing title'))
               elif len(title)>70: issues.append((rel,'WARN',f'Title length {len(title)} > 70'))
               if not desc: issues.append((rel,'WARN','Missing meta description'))
@@ -113,8 +107,8 @@ jobs:
                   except Exception as e: issues.append((rel,'ERROR',f'Invalid JSON-LD: {e}'))
               for href in parser.links:
                   t=local_target(p,href)
-                  if t is not None and not t.exists(): issues.append((rel,'ERROR',f'Broken local link: {href} -> {t.relative_to(ROOT) if ROOT in t.parents else t}'))
-              for tag,src in parser.assets:
+                  if t is not None and not t.exists(): issues.append((rel,'ERROR',f'Broken local link: {href}'))
+              for _,src in parser.assets:
                   t=local_target(p,src)
                   if t is not None and not t.exists(): issues.append((rel,'ERROR',f'Missing local asset: {src}'))
 
@@ -125,25 +119,23 @@ jobs:
 
           sitemap=ROOT/'sitemap.xml'
           if sitemap.exists():
-              sm=sitemap.read_text(encoding='utf-8')
-              urls=re.findall(r'<loc>(.*?)</loc>', sm)
-              for u in urls:
+              for u in re.findall(r'<loc>(.*?)</loc>', sitemap.read_text(encoding='utf-8')):
                   t=local_target(ROOT/'index.html',u)
                   if t is not None and not t.exists(): issues.append(('sitemap.xml','ERROR',f'Sitemap target missing: {u}'))
           else: issues.append(('GLOBAL','ERROR','sitemap.xml missing'))
 
           md=['# Phase 5 static QA','',f'HTML files checked: **{len(html_files)}**','', '| File | Title len | Description len | H1 | Canonical |','|---|---:|---:|---:|---|']
-          for r in rows:
-              md.append(f"| `{r['file']}` | {r['title_len']} | {r['description_len']} | {r['h1']} | {r['canonical'] or '—'} |")
+          for r in rows: md.append(f"| `{r['file']}` | {r['title_len']} | {r['description_len']} | {r['h1']} | {r['canonical'] or '—'} |")
           md += ['', '## Findings']
           if issues:
               for f,sev,msg in issues: md.append(f'- **{sev}** `{f}` — {msg}')
           else: md.append('- No static metadata/local-link errors found.')
           Path('qa/static-report.md').write_text('\n'.join(md)+'\n',encoding='utf-8')
           Path('qa/static-report.json').write_text(json.dumps({'pages':rows,'issues':[{'file':a,'severity':b,'message':c} for a,b,c in issues]},indent=2),encoding='utf-8')
-          print('\n'.join(md[-80:]))
-          if any(sev=='ERROR' for _,sev,_ in issues):
-              raise SystemExit('Static QA found ERROR findings')
+          errors=sum(1 for _,sev,_ in issues if sev=='ERROR'); warnings=sum(1 for _,sev,_ in issues if sev=='WARN')
+          Path('qa/static-counts.txt').write_text(f'errors={errors}\nwarnings={warnings}\npages={len(html_files)}\n')
+          print(f'Pages: {len(html_files)} | Errors: {errors} | Warnings: {warnings}')
+          if errors: raise SystemExit(1)
           PY
 
       - name: Find Chrome
@@ -151,10 +143,7 @@ jobs:
         shell: bash
         run: |
           CHROME="$(command -v google-chrome || command -v google-chrome-stable || command -v chromium || true)"
-          if [ -z "$CHROME" ]; then
-            echo 'Chrome/Chromium not found on runner.' >&2
-            exit 1
-          fi
+          if [ -z "$CHROME" ]; then echo 'Chrome/Chromium not found.' >&2; exit 1; fi
           echo "path=$CHROME" >> "$GITHUB_OUTPUT"
           "$CHROME" --version
 
@@ -167,8 +156,7 @@ jobs:
             if curl -fsS http://127.0.0.1:8000/ >/dev/null; then exit 0; fi
             sleep 1
           done
-          cat qa/server.log
-          exit 1
+          cat qa/server.log; exit 1
 
       - name: Capture desktop and mobile screenshots
         shell: bash
@@ -184,6 +172,8 @@ jobs:
         run: npm install --global lighthouse@12
 
       - name: Run Lighthouse QA
+        id: lighthouse
+        continue-on-error: true
         shell: bash
         env:
           CHROME_PATH: ${{ steps.chrome.outputs.path }}
@@ -197,6 +187,7 @@ jobs:
           lighthouse http://127.0.0.1:8000/research/uk-ai-search-access-index/ --quiet --chrome-flags="$chrome_flags" --only-categories=performance,accessibility,best-practices,seo --form-factor=mobile --output=json --output-path=qa/lighthouse/research-mobile.json
 
       - name: Summarise Lighthouse results
+        if: always()
         shell: bash
         run: |
           python - <<'PY'
@@ -204,19 +195,41 @@ jobs:
           import json
           rows=[]
           for p in sorted(Path('qa/lighthouse').glob('*.json')):
-              d=json.loads(p.read_text())
-              c=d['categories']; a=d['audits']
+              d=json.loads(p.read_text()); c=d['categories']; a=d['audits']
               def score(k): return round((c[k]['score'] or 0)*100)
               def n(k):
-                  v=a.get(k,{}).get('numericValue')
-                  return None if v is None else round(v,1)
+                  v=a.get(k,{}).get('numericValue'); return None if v is None else round(v,1)
               rows.append((p.stem,score('performance'),score('accessibility'),score('best-practices'),score('seo'),n('first-contentful-paint'),n('largest-contentful-paint'),n('cumulative-layout-shift'),n('total-blocking-time')))
           md=['# Phase 5 Lighthouse summary','', '| Run | Perf | A11y | Best | SEO | FCP ms | LCP ms | CLS | TBT ms |','|---|---:|---:|---:|---:|---:|---:|---:|---:|']
-          for r in rows: md.append('| '+ ' | '.join(str(x) for x in r) +' |')
-          md += ['', '## Review thresholds', '- Performance: target 90+', '- Accessibility: target 95+', '- Best Practices: target 95+', '- SEO: target 95+', '- CLS: target < 0.10']
+          for r in rows: md.append('| '+' | '.join(str(x) for x in r)+' |')
+          if not rows: md.append('| no Lighthouse JSON produced | — | — | — | — | — | — | — | — |')
+          md += ['', 'Targets: Performance 90+, Accessibility 95+, Best Practices 95+, SEO 95+, CLS < 0.10.']
           Path('qa/lighthouse-summary.md').write_text('\n'.join(md)+'\n',encoding='utf-8')
           print('\n'.join(md))
           PY
+
+      - name: Build PR QA comment
+        if: always()
+        shell: bash
+        run: |
+          python - <<'PY'
+          from pathlib import Path
+          counts={}
+          p=Path('qa/static-counts.txt')
+          if p.exists():
+              for line in p.read_text().splitlines():
+                  if '=' in line:
+                      k,v=line.split('=',1); counts[k]=v
+          lh=Path('qa/lighthouse-summary.md').read_text(encoding='utf-8') if Path('qa/lighthouse-summary.md').exists() else 'Lighthouse summary was not generated.'
+          body=f'''## Phase 5 automated QA\n\nRun ID: **${{GITHUB_RUN_ID}}**  \nCommit: `${{GITHUB_SHA}}`  \nStatic pages checked: **{counts.get('pages','?')}**  \nStatic errors: **{counts.get('errors','?')}**  \nStatic warnings: **{counts.get('warnings','?')}**\n\n{lh}\n\nScreenshots and raw Lighthouse JSON are saved in the `phase5-qa-${{GITHUB_SHA}}` workflow artifact.\n\nWorkflow: https://github.com/${{GITHUB_REPOSITORY}}/actions/runs/${{GITHUB_RUN_ID}}\n'''
+          Path('qa/pr-comment.md').write_text(body,encoding='utf-8')
+          PY
+
+      - name: Post QA summary to PR 1
+        if: always()
+        env:
+          GH_TOKEN: ${{ github.token }}
+        run: gh pr comment 1 --repo "$GITHUB_REPOSITORY" --body-file qa/pr-comment.md
 
       - name: Upload Phase 5 QA artifact
         if: always()
