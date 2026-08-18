@@ -1,0 +1,209 @@
+name: Temporary Phase 5 QA Runner
+
+on:
+  push:
+    branches:
+      - main
+
+permissions:
+  contents: read
+  issues: write
+  pull-requests: write
+
+jobs:
+  phase5:
+    runs-on: ubuntu-latest
+    timeout-minutes: 20
+    steps:
+      - name: Checkout proposed restructure branch
+        uses: actions/checkout@v4
+        with:
+          ref: kronatrix-authority-restructure
+
+      - name: Set up Node
+        uses: actions/setup-node@v4
+        with:
+          node-version: '22'
+
+      - name: Set up Python
+        uses: actions/setup-python@v5
+        with:
+          python-version: '3.12'
+
+      - name: Prepare QA directories
+        run: mkdir -p qa/lighthouse qa/screenshots
+
+      - name: Static metadata and local-link audit
+        id: staticqa
+        continue-on-error: true
+        shell: bash
+        run: |
+          python - <<'PY'
+          from pathlib import Path
+          from html.parser import HTMLParser
+          from urllib.parse import urlparse, unquote
+          import json, re
+          ROOT=Path('.').resolve(); issues=[]; rows=[]; canonicals={}; titles={}
+          html_files=sorted(p for p in ROOT.rglob('*.html') if '.git' not in p.parts)
+          class P(HTMLParser):
+              def __init__(self):
+                  super().__init__(); self.title=''; self.in_title=False; self.links=[]; self.assets=[]; self.meta={}; self.canonical=None; self.h1=0; self.lang=None; self.jsonld=[]; self._j=False; self._buf=''
+              def handle_starttag(self,tag,attrs):
+                  a=dict(attrs)
+                  if tag=='html': self.lang=a.get('lang')
+                  if tag=='title': self.in_title=True
+                  if tag=='a' and a.get('href'): self.links.append(a['href'])
+                  if tag in ('img','script','link'):
+                      k='src' if tag in ('img','script') else 'href'
+                      if a.get(k): self.assets.append(a[k])
+                  if tag=='meta':
+                      k=a.get('name') or a.get('property')
+                      if k and a.get('content') is not None: self.meta[k.lower()]=a['content']
+                  if tag=='link' and (a.get('rel') or '').lower()=='canonical': self.canonical=a.get('href')
+                  if tag=='h1': self.h1+=1
+                  if tag=='script' and a.get('type')=='application/ld+json': self._j=True; self._buf=''
+              def handle_endtag(self,tag):
+                  if tag=='title': self.in_title=False
+                  if tag=='script' and self._j: self.jsonld.append(self._buf); self._j=False; self._buf=''
+              def handle_data(self,data):
+                  if self.in_title: self.title+=data
+                  if self._j: self._buf+=data
+          def target(page,href):
+              if not href or href.startswith(('#','mailto:','tel:','javascript:','data:')): return None
+              u=urlparse(href)
+              if u.scheme in ('http','https'):
+                  if u.netloc not in ('kronatrix.co.uk','www.kronatrix.co.uk'): return None
+                  path=unquote(u.path)
+              elif u.scheme: return None
+              else: path=unquote(u.path)
+              if not path: return page
+              t=(ROOT/path.lstrip('/')) if path.startswith('/') else (page.parent/path)
+              t=Path(str(t).split('#')[0].split('?')[0])
+              if t.is_dir() or path.endswith('/'): t=t/'index.html'
+              return t
+          for p in html_files:
+              q=P(); q.feed(p.read_text(encoding='utf-8',errors='replace')); rel=str(p.relative_to(ROOT)); title=' '.join(q.title.split()); desc=q.meta.get('description','').strip()
+              rows.append((rel,len(title),len(desc),q.h1,q.canonical or '—'))
+              if not title: issues.append((rel,'ERROR','Missing title'))
+              elif len(title)>70: issues.append((rel,'WARN',f'Title {len(title)} chars'))
+              if not desc: issues.append((rel,'WARN','Missing meta description'))
+              elif not 25<=len(desc)<=160: issues.append((rel,'WARN',f'Description {len(desc)} chars'))
+              if not q.canonical: issues.append((rel,'WARN','Missing canonical'))
+              else: canonicals.setdefault(q.canonical,[]).append(rel)
+              if title: titles.setdefault(title,[]).append(rel)
+              if q.h1!=1: issues.append((rel,'WARN',f'H1 count {q.h1}'))
+              if q.lang not in ('en-GB','en-gb'): issues.append((rel,'WARN',f'lang={q.lang!r}'))
+              for js in q.jsonld:
+                  try: json.loads(js)
+                  except Exception as e: issues.append((rel,'ERROR',f'Invalid JSON-LD: {e}'))
+              for href in q.links+q.assets:
+                  t=target(p,href)
+                  if t is not None and not t.exists(): issues.append((rel,'ERROR',f'Missing local target: {href}'))
+          for k,v in canonicals.items():
+              if len(v)>1: issues.append(('GLOBAL','WARN',f'Duplicate canonical {k}: {v}'))
+          for k,v in titles.items():
+              if len(v)>1: issues.append(('GLOBAL','WARN',f'Duplicate title {k}: {v}'))
+          sm=ROOT/'sitemap.xml'
+          if sm.exists():
+              for u in re.findall(r'<loc>(.*?)</loc>',sm.read_text(encoding='utf-8')):
+                  t=target(ROOT/'index.html',u)
+                  if t is not None and not t.exists(): issues.append(('sitemap.xml','ERROR',f'Missing sitemap target: {u}'))
+          else: issues.append(('GLOBAL','ERROR','Missing sitemap.xml'))
+          errors=sum(sev=='ERROR' for _,sev,_ in issues); warns=sum(sev=='WARN' for _,sev,_ in issues)
+          md=['# Phase 5 static QA','',f'Pages checked: **{len(html_files)}**  ',f'Errors: **{errors}**  ',f'Warnings: **{warns}**','','| File | Title | Description | H1 | Canonical |','|---|---:|---:|---:|---|']
+          md += [f'| `{a}` | {b} | {c} | {d} | {e} |' for a,b,c,d,e in rows]
+          md += ['','## Findings'] + ([f'- **{sev}** `{f}` — {m}' for f,sev,m in issues] or ['- No static findings.'])
+          Path('qa/static-report.md').write_text('\n'.join(md)+'\n',encoding='utf-8')
+          Path('qa/static-counts.txt').write_text(f'pages={len(html_files)}\nerrors={errors}\nwarnings={warns}\n')
+          print(f'Pages={len(html_files)} Errors={errors} Warnings={warns}')
+          if errors: raise SystemExit(1)
+          PY
+
+      - name: Locate Chrome
+        id: chrome
+        run: |
+          CHROME="$(command -v google-chrome || command -v google-chrome-stable || command -v chromium || true)"
+          test -n "$CHROME"
+          echo "path=$CHROME" >> "$GITHUB_OUTPUT"
+          "$CHROME" --version
+
+      - name: Start local preview server
+        run: |
+          python -m http.server 8000 --bind 127.0.0.1 > qa/server.log 2>&1 &
+          for i in {1..20}; do curl -fsS http://127.0.0.1:8000/ >/dev/null && exit 0; sleep 1; done
+          cat qa/server.log; exit 1
+
+      - name: Capture representative screenshots
+        env:
+          CHROME: ${{ steps.chrome.outputs.path }}
+        run: |
+          "$CHROME" --headless=new --no-sandbox --disable-gpu --hide-scrollbars --window-size=1440,1200 --screenshot=qa/screenshots/home-desktop.png http://127.0.0.1:8000/
+          "$CHROME" --headless=new --no-sandbox --disable-gpu --hide-scrollbars --window-size=390,844 --screenshot=qa/screenshots/home-mobile.png http://127.0.0.1:8000/
+          "$CHROME" --headless=new --no-sandbox --disable-gpu --hide-scrollbars --window-size=1440,1200 --screenshot=qa/screenshots/ai-seo-desktop.png http://127.0.0.1:8000/what-is-ai-seo/
+          "$CHROME" --headless=new --no-sandbox --disable-gpu --hide-scrollbars --window-size=390,844 --screenshot=qa/screenshots/accountants-mobile.png http://127.0.0.1:8000/industries/accountants/
+
+      - name: Install Lighthouse
+        run: npm install --global lighthouse@12
+
+      - name: Run Lighthouse
+        id: lh
+        continue-on-error: true
+        env:
+          CHROME_PATH: ${{ steps.chrome.outputs.path }}
+        run: |
+          FLAGS='--headless=new --no-sandbox --disable-gpu'
+          lighthouse http://127.0.0.1:8000/ --quiet --chrome-flags="$FLAGS" --only-categories=performance,accessibility,best-practices,seo --form-factor=desktop --screenEmulation.disabled --output=json --output-path=qa/lighthouse/home-desktop.json
+          lighthouse http://127.0.0.1:8000/ --quiet --chrome-flags="$FLAGS" --only-categories=performance,accessibility,best-practices,seo --form-factor=mobile --output=json --output-path=qa/lighthouse/home-mobile.json
+          lighthouse http://127.0.0.1:8000/what-is-ai-seo/ --quiet --chrome-flags="$FLAGS" --only-categories=performance,accessibility,best-practices,seo --form-factor=mobile --output=json --output-path=qa/lighthouse/ai-seo-mobile.json
+          lighthouse http://127.0.0.1:8000/industries/accountants/ --quiet --chrome-flags="$FLAGS" --only-categories=performance,accessibility,best-practices,seo --form-factor=mobile --output=json --output-path=qa/lighthouse/accountants-mobile.json
+          lighthouse http://127.0.0.1:8000/research/uk-ai-search-access-index/ --quiet --chrome-flags="$FLAGS" --only-categories=performance,accessibility,best-practices,seo --form-factor=mobile --output=json --output-path=qa/lighthouse/research-mobile.json
+
+      - name: Summarise Lighthouse
+        if: always()
+        run: |
+          python - <<'PY'
+          from pathlib import Path
+          import json
+          rows=[]
+          for p in sorted(Path('qa/lighthouse').glob('*.json')):
+              d=json.loads(p.read_text()); c=d['categories']; a=d['audits']
+              sc=lambda k: round((c[k]['score'] or 0)*100)
+              nv=lambda k: None if a.get(k,{}).get('numericValue') is None else round(a[k]['numericValue'],1)
+              rows.append((p.stem,sc('performance'),sc('accessibility'),sc('best-practices'),sc('seo'),nv('first-contentful-paint'),nv('largest-contentful-paint'),nv('cumulative-layout-shift'),nv('total-blocking-time')))
+          md=['# Phase 5 Lighthouse summary','','| Run | Perf | A11y | Best | SEO | FCP ms | LCP ms | CLS | TBT ms |','|---|---:|---:|---:|---:|---:|---:|---:|---:|']
+          md += ['| '+' | '.join(map(str,r))+' |' for r in rows]
+          if not rows: md.append('| no report | — | — | — | — | — | — | — | — |')
+          md += ['','Targets: Performance 90+, Accessibility 95+, Best Practices 95+, SEO 95+, CLS < 0.10.']
+          Path('qa/lighthouse-summary.md').write_text('\n'.join(md)+'\n',encoding='utf-8')
+          print('\n'.join(md))
+          PY
+
+      - name: Build PR comment
+        if: always()
+        run: |
+          python - <<'PY'
+          from pathlib import Path
+          counts={}
+          p=Path('qa/static-counts.txt')
+          if p.exists():
+              for line in p.read_text().splitlines():
+                  if '=' in line:
+                      k,v=line.split('=',1); counts[k]=v
+          lh=Path('qa/lighthouse-summary.md').read_text() if Path('qa/lighthouse-summary.md').exists() else 'No Lighthouse summary generated.'
+          body=f'''## Phase 5 automated QA result\n\nRun ID: **${{GITHUB_RUN_ID}}**  \nTested branch commit: `${{GITHUB_SHA}}`  \nPages checked: **{counts.get('pages','?')}**  \nStatic errors: **{counts.get('errors','?')}**  \nStatic warnings: **{counts.get('warnings','?')}**\n\n{lh}\n\nScreenshots and raw Lighthouse JSON are in artifact `phase5-qa-${{GITHUB_RUN_ID}}`.\n\nWorkflow: https://github.com/${{GITHUB_REPOSITORY}}/actions/runs/${{GITHUB_RUN_ID}}\n'''
+          Path('qa/pr-comment.md').write_text(body)
+          PY
+
+      - name: Comment result on draft PR
+        if: always()
+        env:
+          GH_TOKEN: ${{ github.token }}
+        run: gh pr comment 1 --repo "$GITHUB_REPOSITORY" --body-file qa/pr-comment.md
+
+      - name: Upload QA artifact
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: phase5-qa-${{ github.run_id }}
+          path: qa/
+          retention-days: 7
