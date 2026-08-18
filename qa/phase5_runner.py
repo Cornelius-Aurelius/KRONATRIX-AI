@@ -93,7 +93,9 @@ def local_target(page: Path, href: str):
 
 
 def static_qa():
-    html_files = sorted(p for p in ROOT.rglob("*.html") if ".git" not in p.parts and "qa-output" not in p.parts)
+    all_html = sorted(p for p in ROOT.rglob("*.html") if ".git" not in p.parts and "qa-output" not in p.parts)
+    verification_files = {p for p in all_html if p.parent == ROOT and re.fullmatch(r"google[0-9a-f]+\.html", p.name, flags=re.I)}
+    html_files = [p for p in all_html if p not in verification_files]
     issues = []
     rows = []
     canonicals = {}
@@ -105,18 +107,22 @@ def static_qa():
         rel = str(p.relative_to(ROOT))
         title = " ".join(q.title.split())
         desc = q.meta.get("description", "").strip()
+        is_noindex_utility = rel == "404.html" or "noindex" in q.meta.get("robots", "").lower()
         rows.append((rel, len(title), len(desc), q.h1, q.canonical or "—"))
         if not title:
             issues.append((rel, "ERROR", "Missing title"))
         elif len(title) > 70:
             issues.append((rel, "WARN", f"Title length {len(title)} > 70"))
-        if not desc:
-            issues.append((rel, "WARN", "Missing meta description"))
-        elif not 25 <= len(desc) <= 160:
-            issues.append((rel, "WARN", f"Meta description length {len(desc)} outside 25–160"))
-        if not q.canonical:
-            issues.append((rel, "WARN", "Missing canonical"))
-        else:
+        if not is_noindex_utility:
+            if not desc:
+                issues.append((rel, "WARN", "Missing meta description"))
+            elif not 25 <= len(desc) <= 160:
+                issues.append((rel, "WARN", f"Meta description length {len(desc)} outside 25–160"))
+            if not q.canonical:
+                issues.append((rel, "WARN", "Missing canonical"))
+            else:
+                canonicals.setdefault(q.canonical, []).append(rel)
+        elif q.canonical:
             canonicals.setdefault(q.canonical, []).append(rel)
         if title:
             titles.setdefault(title, []).append(rel)
@@ -155,7 +161,8 @@ def static_qa():
     md = [
         "# Phase 5 static QA",
         "",
-        f"Pages checked: **{len(html_files)}**  ",
+        f"Content HTML pages checked: **{len(html_files)}**  ",
+        f"Verification files excluded: **{len(verification_files)}**  ",
         f"Errors: **{errors}**  ",
         f"Warnings: **{warnings}**",
         "",
@@ -166,7 +173,7 @@ def static_qa():
     md += ["", "## Findings"]
     md += [f"- **{sev}** `{f}` — {m}" for f, sev, m in issues] or ["- No static findings."]
     (QA / "static-report.md").write_text("\n".join(md) + "\n", encoding="utf-8")
-    (QA / "static-report.json").write_text(json.dumps({"pages": len(html_files), "errors": errors, "warnings": warnings, "issues": issues}, indent=2), encoding="utf-8")
+    (QA / "static-report.json").write_text(json.dumps({"pages": len(html_files), "verification_files_excluded": len(verification_files), "errors": errors, "warnings": warnings, "issues": issues}, indent=2), encoding="utf-8")
     return len(html_files), errors, warnings
 
 
@@ -198,6 +205,7 @@ def browser_qa():
             ("390,844", "home-mobile.png", "/"),
             ("1440,1200", "ai-seo-desktop.png", "/what-is-ai-seo/"),
             ("390,844", "accountants-mobile.png", "/industries/accountants/"),
+            ("390,844", "research-mobile.png", "/research/uk-ai-search-access-index/"),
         ]
         for size, name, path in shots:
             run([chrome, "--headless=new", "--no-sandbox", "--disable-gpu", "--hide-scrollbars", f"--window-size={size}", f"--screenshot={SS / name}", f"http://127.0.0.1:8000{path}"])
@@ -258,7 +266,7 @@ def main():
     body = [
         "## Phase 5 automated QA result",
         "",
-        f"Pages checked: **{pages}**  ",
+        f"Content HTML pages checked: **{pages}**  ",
         f"Static errors: **{errors}**  ",
         f"Static warnings: **{warnings}**",
         "",
