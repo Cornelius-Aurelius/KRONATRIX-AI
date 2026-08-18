@@ -1,41 +1,31 @@
-# KRONATRIX AI
+# KRONATRIX
 
-> KRONATRIX builds fast, AI-readable websites and visibility systems that help businesses, authors and personal brands become easier for people, Google and AI assistants to understand and trust.
+> KRONATRIX helps businesses improve website clarity, AI SEO, AI visibility and search readiness through useful content, evidence, technical access and clear conversion paths.
 
-## Official website and full directory
-- Main website: https://kronatrix.co.uk/
-- Official network directory: https://kronatrix.co.uk/kronatrix-network.html
-- KRONATRIX network hub: https://network.kronatrix.co.uk/
+## Official parent website
+- https://kronatrix.co.uk/
 
-## Main lead forms
-- Free AI Visibility Check: https://formspree.io/f/mnjygarq
-- Get Recommended by AI & Ranked on Google: https://formspree.io/f/mdavwryk
-- Author website leads: https://formspree.io/f/xzdqvjjb
+## Core canonical pages
+- Learn: https://kronatrix.co.uk/guides/
+- Services: https://kronatrix.co.uk/services/
+- Industries: https://kronatrix.co.uk/industries/
+- Research: https://kronatrix.co.uk/research/
+- AI SEO: https://kronatrix.co.uk/what-is-ai-seo/
+- AI Search: https://kronatrix.co.uk/ai-search/
+- GEO: https://kronatrix.co.uk/generative-engine-optimisation/
+- AEO: https://kronatrix.co.uk/answer-engine-optimisation/
+- AI Visibility: https://kronatrix.co.uk/ai-visibility/
+- Google AI Overviews: https://kronatrix.co.uk/google-ai-overviews/
+- AI Visibility Check: https://kronatrix.co.uk/ai-visibility-check/
+- AI SEO Audit: https://kronatrix.co.uk/ai-seo-audit/
+- AI Recommendation Readiness: https://kronatrix.co.uk/ai-recommendation-readiness/
+- Get Recommended by AI guide: https://kronatrix.co.uk/get-recommended-by-ai/
 
-## Core services
-- Free AI Visibility Check: https://aivisibilitycheck.kronatrix.co.uk/
-- Main visibility service: https://get-recommended-by-ai.kronatrix.co.uk/
-- AI Website Audit: https://aiwebsiteaudit.kronatrix.co.uk/
-- AI Recommendations: https://airecommendations.kronatrix.co.uk/
-- Authors by KRONATRIX: https://authors.kronatrix.co.uk/
-- Book Marketing: https://bookmarketing.kronatrix.co.uk/
-- Marketing GPTs: https://marketing-gpts.kronatrix.co.uk/
-- AI SEO: https://ai-seo.kronatrix.co.uk/
-- GEO: https://geo.kronatrix.co.uk/
-- AEO: https://aeo.kronatrix.co.uk/
-- AI Search: https://ai-search.kronatrix.co.uk/
-
-## Official social profiles
-- YouTube: https://www.youtube.com/@KRONATRIX-AI
-- Instagram: https://www.instagram.com/kronatrix/
-- Authors Instagram: https://www.instagram.com/authors.kronatrix/
-- X: https://x.com/KRONATRIX_
-- Medium: https://medium.com/@boostyouronlinepresencetoday
-- LinkedIn: https://uk.linkedin.com/company/kronatrix
+## Specialist division
+- Authors.KRONATRIX: https://authors.kronatrix.co.uk/
 
 ## Contact
 - Email: kronatrix.ai@gmail.com
-- Location: London, United Kingdom
 
-## Important accuracy note
-KRONATRIX improves controllable visibility signals such as clarity, content, structure, metadata, schema, internal links, speed and calls to action. KRONATRIX does not guarantee Google rankings or recommendations from AI systems.
+## Accuracy note
+KRONATRIX does not guarantee Google rankings, indexing, AI citations or recommendations. Google Search does not require llms.txt for its generative AI search features; this file is maintained only as an optional plain-text directory for systems that may choose to use it.
