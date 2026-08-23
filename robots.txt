@@ -1,3 +1,15 @@
+# KRONATRIX crawler access
+# Search and AI-search discovery are intentionally allowed.
+
+User-agent: Googlebot
+Allow: /
+
+User-agent: Bingbot
+Allow: /
+
+User-agent: OAI-SearchBot
+Allow: /
+
 User-agent: *
 Allow: /
 
